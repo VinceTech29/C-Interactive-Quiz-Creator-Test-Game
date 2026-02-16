@@ -8,7 +8,7 @@ using namespace std;
 struct Question {
     string questionText;
     vector<string> options;
-    int correctAnswer;
+    char correctAnswer; // A, B, C, D
 };
 
 int main() {
@@ -16,13 +16,13 @@ int main() {
     int numQuestions;
 
     cout << "===== QUIZ CREATOR =====\n";
-    cout << "Enter number of questions: ";
+    cout << "How many questions? ";
     cin >> numQuestions;
     cin.ignore();
 
-    // =============================
-    // CREATE QUIZ
-    // =============================
+    // =========================
+    // CREATE QUESTIONS
+    // =========================
     for (int i = 0; i < numQuestions; i++) {
         Question q;
         q.options.resize(4);
@@ -44,67 +44,69 @@ int main() {
         cout << "Option D: ";
         getline(cin, q.options[3]);
 
-        cout << "Correct answer (0=A, 1=B, 2=C, 3=D): ";
+        cout << "Correct answer (A/B/C/D): ";
         cin >> q.correctAnswer;
+        q.correctAnswer = toupper(q.correctAnswer);
         cin.ignore();
 
         quiz.push_back(q);
     }
 
-    // =============================
+    // =========================
     // RANDOMIZE QUESTIONS
-    // =============================
+    // =========================
     random_device rd;
     mt19937 g(rd());
     shuffle(quiz.begin(), quiz.end(), g);
 
     cout << "\n=================================\n";
-    cout << "      QUIZ STARTING NOW!\n";
+    cout << "          TEST START\n";
     cout << "=================================\n";
 
     int score = 0;
 
-    // =============================
+    // =========================
     // TEST MODE
-    // =============================
+    // =========================
     for (int i = 0; i < quiz.size(); i++) {
-        cout << "\nQuestion " << i + 1 << ": " << quiz[i].questionText << "\n";
+        cout << "\nQuestion " << i + 1 << ": "
+             << quiz[i].questionText << "\n";
 
         cout << "A. " << quiz[i].options[0] << "\n";
         cout << "B. " << quiz[i].options[1] << "\n";
         cout << "C. " << quiz[i].options[2] << "\n";
         cout << "D. " << quiz[i].options[3] << "\n";
 
-        int answer;
-        cout << "Your answer (0=A, 1=B, 2=C, 3=D): ";
-        cin >> answer;
+        char userAnswer;
+        cout << "Your answer (A/B/C/D): ";
+        cin >> userAnswer;
+        userAnswer = toupper(userAnswer);
 
-        if (answer == quiz[i].correctAnswer) {
+        if (userAnswer == quiz[i].correctAnswer) {
             cout << "✅ Correct!\n";
             score++;
         } else {
-            cout << "❌ Wrong! Correct answer was: "
-                 << char('A' + quiz[i].correctAnswer) << "\n";
+            cout << "❌ Wrong! Correct answer was "
+                 << quiz[i].correctAnswer << "\n";
         }
     }
 
-    // =============================
-    // FINAL RESULT
-    // =============================
+    // =========================
+    // FINAL SCORE
+    // =========================
     cout << "\n=================================\n";
-    cout << "         FINAL RESULT\n";
-    cout << "=================================\n";
-    cout << "Score: " << score << " / " << quiz.size() << "\n";
+    cout << "FINAL SCORE: " << score
+         << " / " << quiz.size() << "\n";
 
-    double percentage = (double)score / quiz.size() * 100;
-    cout << "Percentage: " << percentage << "%\n";
+    double percent = (double)score / quiz.size() * 100;
+    cout << "Percentage: " << percent << "%\n";
 
-    if (percentage == 100)
-        cout << "🏆 Excellent!\n";
-    else if (percentage >= 60)
+    if (percent == 100)
+        cout << "🏆 Perfect Score!\n";
+    else if (percent >= 60)
         cout << "👏 Good Job!\n";
     else
-        cout << "📚 Keep Studying!\n";
+        cout << "📚 Study More!\n";
 
     return 0;
 }
